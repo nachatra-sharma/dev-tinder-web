@@ -20,29 +20,37 @@ const Header = () => {
 
   const { isMenuOpen, handleMenu } = useContext(menuContext);
 
-  // useEffect(() => {
-  //   function checkForCookies() {
-  //     try {
-  //       const cookie = Cookies.get("token");
-  //       if (!cookie) {
-  //         localStorage.setItem("loggedInUser", JSON.stringify({}));
-  //         localStorage.setItem("isLoggedIn", JSON.stringify(false));
-  //         navigate("/login");
-  //       }
-  //     } catch (error) {
-  //       toast.error(error.message);
-  //     }
-  //   }
+  useEffect(() => {
+  function checkForCookies() {
+    try {
+      const cookie = Cookies.get("token");
+      if (!cookie) {
+        localStorage.setItem("loggedInUser", JSON.stringify({}));
+        localStorage.setItem("isLoggedIn", JSON.stringify(false));
+        navigate("/login");
+        return false;
+      }
+      return true;
+    } catch (error) {
+      toast.error("Error checking cookies. Please try again.");
+      return false;
+    }
+  }
 
-  //   function checkForLogIn() {
-  //     if (!isLoggedIn || !loggedInUser) {
-  //       navigate("/login");
-  //     }
-  //   }
+  function checkForLogIn() {
+    const storedIsLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
+    const storedLoggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
-  //   checkForCookies();
-  //   checkForLogIn();
-  // }, [navigate]);
+    if (!storedIsLoggedIn || !storedLoggedInUser || !storedIsLoggedIn) {
+      navigate("/login");
+    }
+  }
+
+  const tokenFound = checkForCookies(); 
+  if (tokenFound) {
+    checkForLogIn();
+  }
+}, [navigate]);
 
   const isLoggedIn = getIsLoggedInUser();
   const loggedInUser = getLoggedInUser();
@@ -56,7 +64,7 @@ const Header = () => {
       const response = await fetch(BASE_URL + "/api/v1/logout", {
         method: "POST",
         headers: {
-          "Content-Types": "application/json",
+          "Content-Type": "application/json",
         },
       });
       const result = await response.json();
