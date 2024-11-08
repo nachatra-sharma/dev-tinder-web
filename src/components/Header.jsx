@@ -41,7 +41,7 @@ const Header = () => {
     const storedIsLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
     const storedLoggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
-    if (!storedIsLoggedIn || !storedLoggedInUser || !storedIsLoggedIn) {
+    if (!storedIsLoggedIn || !storedLoggedInUser) {
       navigate("/login");
     }
   }
@@ -56,7 +56,11 @@ const Header = () => {
   const loggedInUser = getLoggedInUser();
 
   const toggleMenu = () => {
+   if (handleMenu) {
     handleMenu(!isMenuOpen);
+  } else {
+    console.error("handleMenu is undefined");
+  }
   };
 
   async function handleLogout() {
