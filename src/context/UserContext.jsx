@@ -5,9 +5,6 @@ const UserContext = ({ children }) => {
   const [loggedInUser, setLoggedInUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  console.log("logginUser", loggedInUser)
-  console.log("isLoggedIN", isLoggedIn)
-
   function handleLoggedInUser(loggedInUser) {
     setLoggedInUser(loggedInUser);
     localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
