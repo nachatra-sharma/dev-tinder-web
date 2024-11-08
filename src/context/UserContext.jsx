@@ -5,7 +5,7 @@ const UserContext = ({ children }) => {
   const [loggedInUser, setLoggedInUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  console.log("logginUser", loggedInsUser)
+  console.log("logginUser", loggedInUser)
   console.log("isLoggedIN", isLoggedIn)
 
   function handleLoggedInUser(loggedInUser) {
