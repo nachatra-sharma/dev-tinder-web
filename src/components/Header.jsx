@@ -20,7 +20,11 @@ const Header = () => {
 
   const { isMenuOpen, handleMenu } = useContext(menuContext);
 
- useEffect(() => {
+ 
+  const isLoggedIn = getIsLoggedInUser();
+  const loggedInUser = getLoggedInUser();
+
+  useEffect(() => {
     function checkForCookies() {
       try {
         const cookie = Cookies.get("token");
@@ -60,8 +64,6 @@ const Header = () => {
     }
   }, [isLoggedIn, loggedInUser, navigate]);
 
-  const isLoggedIn = getIsLoggedInUser();
-  const loggedInUser = getLoggedInUser();
 
   const toggleMenu = () => {
     handleMenu(!isMenuOpen);
