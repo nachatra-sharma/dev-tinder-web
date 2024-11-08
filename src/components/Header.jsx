@@ -1,6 +1,5 @@
 import { useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { userContext } from "../context/UserContext";
@@ -10,6 +9,7 @@ import { BASE_URL } from "../utils/Constant";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();  // Track the current route
 
   const {
     getLoggedInUser,
@@ -21,47 +21,50 @@ const Header = () => {
   const { isMenuOpen, handleMenu } = useContext(menuContext);
 
   useEffect(() => {
-  function checkForCookies() {
-    try {
-      const cookie = Cookies.get("token");
-      console.log("token", token);
-      if (!cookie) {
-        localStorage.setItem("loggedInUser", JSON.stringify({}));
-        localStorage.setItem("isLoggedIn", JSON.stringify(false));
-        navigate("/login");
+    function checkForCookies() {
+      try {
+        const cookie = Cookies.get("token");
+        console.log("token", cookie);
+        if (!cookie) {
+          localStorage.setItem("loggedInUser", JSON.stringify({}));
+          localStorage.setItem("isLoggedIn", JSON.stringify(false));
+          navigate("/login");
+          return false;
+        }
+        return true;
+      } catch (error) {
+        toast.error("Error checking cookies. Please try again.");
         return false;
       }
-      return true;
-    } catch (error) {
-      toast.error("Error checking cookies. Please try again.");
-      return false;
     }
-  }
 
-  function checkForLogIn() {
-    const storedIsLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
-    const storedLoggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    function checkForLogIn() {
+      const storedIsLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
+      const storedLoggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
-    if (!storedIsLoggedIn || !storedLoggedInUser) {
-      navigate("/login");
+      if (!storedIsLoggedIn || !storedLoggedInUser) {
+        navigate("/login");
+      }
     }
-  }
 
-  const tokenFound = checkForCookies(); 
-  if (tokenFound) {
-    checkForLogIn();
-  }
-}, [navigate]);
+    const tokenFound = checkForCookies(); 
+    if (tokenFound) {
+      checkForLogIn();
+    }
+  }, [navigate]);
+
+  // Close menu if navigating to any route except /login and /signup
+  useEffect(() => {
+    if (!['/login', '/signup'].includes(location.pathname)) {
+      handleMenu(false);
+    }
+  }, [location.pathname, handleMenu]);
 
   const isLoggedIn = getIsLoggedInUser();
   const loggedInUser = getLoggedInUser();
 
   const toggleMenu = () => {
-   if (handleMenu) {
     handleMenu(!isMenuOpen);
-  } else {
-    console.error("handleMenu is undefined");
-  }
   };
 
   async function handleLogout() {
@@ -96,7 +99,7 @@ const Header = () => {
           className="py-2 text-slate-800 text-2xl font-bold bg-[#eccc68] px-8 rounded-md"
           onClick={() => {
             if (!isLoggedIn) {
-              toast.error("Please logged in.");
+              toast.error("Please log in.");
             } else {
               navigate("/");
             }
