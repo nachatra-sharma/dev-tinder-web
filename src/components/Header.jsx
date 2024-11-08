@@ -19,31 +19,30 @@ const Header = () => {
   } = useContext(userContext);
 
   const { isMenuOpen, handleMenu } = useContext(menuContext);
-  console.log("checking menu", isMenuOpen, handleMenu);
 
-  useEffect(() => {
-    function checkForCookies() {
-      try {
-        const cookie = Cookies.get("token");
-        if (!cookie) {
-          localStorage.setItem("loggedInUser", JSON.stringify({}));
-          localStorage.setItem("isLoggedIn", JSON.stringify(false));
-          navigate("/login");
-        }
-      } catch (error) {
-        toast.error(error.message);
-      }
-    }
+  // useEffect(() => {
+  //   function checkForCookies() {
+  //     try {
+  //       const cookie = Cookies.get("token");
+  //       if (!cookie) {
+  //         localStorage.setItem("loggedInUser", JSON.stringify({}));
+  //         localStorage.setItem("isLoggedIn", JSON.stringify(false));
+  //         navigate("/login");
+  //       }
+  //     } catch (error) {
+  //       toast.error(error.message);
+  //     }
+  //   }
 
-    function checkForLogIn() {
-      if (!isLoggedIn || !loggedInUser) {
-        navigate("/login");
-      }
-    }
+  //   function checkForLogIn() {
+  //     if (!isLoggedIn || !loggedInUser) {
+  //       navigate("/login");
+  //     }
+  //   }
 
-    checkForCookies();
-    checkForLogIn();
-  }, [navigate]);
+  //   checkForCookies();
+  //   checkForLogIn();
+  // }, [navigate]);
 
   const isLoggedIn = getIsLoggedInUser();
   const loggedInUser = getLoggedInUser();
