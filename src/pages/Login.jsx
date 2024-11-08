@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { BASE_URL } from "../utils/Constant";
 
 const Login = () => {
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
