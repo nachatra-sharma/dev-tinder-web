@@ -41,7 +41,7 @@ const Login = () => {
       if (result.success) {
         handleLoggedInUser(result?.data?.responseUser);
         handleIsLoggedInUser(true);
-        naviagte("/");
+        navigate("/");
       }
     } catch (error) {
       toast.error("Something went wrong.");
