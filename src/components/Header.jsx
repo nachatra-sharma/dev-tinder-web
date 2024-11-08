@@ -1,5 +1,6 @@
 import { useEffect, useContext } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { userContext } from "../context/UserContext";
@@ -9,7 +10,6 @@ import { BASE_URL } from "../utils/Constant";
 
 const Header = () => {
   const navigate = useNavigate();
-  const location = useLocation();  // Track the current route
 
   const {
     getLoggedInUser,
@@ -24,41 +24,39 @@ const Header = () => {
     function checkForCookies() {
       try {
         const cookie = Cookies.get("token");
-        console.log("token", cookie);
+        if (location.pathname === "/login" || location.pathname === "/signup") {
+          return;
+        }
         if (!cookie) {
           localStorage.setItem("loggedInUser", JSON.stringify({}));
           localStorage.setItem("isLoggedIn", JSON.stringify(false));
           navigate("/login");
-          return false;
         }
-        return true;
       } catch (error) {
         toast.error("Error checking cookies. Please try again.");
-        return false;
       }
     }
 
     function checkForLogIn() {
       const storedIsLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
-      const storedLoggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      const storedLoggedInUser = JSON.parse(
+        localStorage.getItem("loggedInUser")
+      );
+
+      if (location.pathname === "/login" || location.pathname === "/signup") {
+        return;
+      }
 
       if (!storedIsLoggedIn || !storedLoggedInUser) {
+        localStorage.setItem("loggedInUser", JSON.stringify({}));
+        localStorage.setItem("isLoggedIn", JSON.stringify(false));
         navigate("/login");
       }
     }
 
-    const tokenFound = checkForCookies(); 
-    if (tokenFound) {
-      checkForLogIn();
-    }
+    checkForCookies();
+    checkForLogIn();
   }, [navigate]);
-
-  // Close menu if navigating to any route except /login and /signup
-  useEffect(() => {
-    if (!['/login', '/signup'].includes(location.pathname)) {
-      handleMenu(false);
-    }
-  }, [location.pathname, handleMenu]);
 
   const isLoggedIn = getIsLoggedInUser();
   const loggedInUser = getLoggedInUser();
@@ -99,7 +97,7 @@ const Header = () => {
           className="py-2 text-slate-800 text-2xl font-bold bg-[#eccc68] px-8 rounded-md"
           onClick={() => {
             if (!isLoggedIn) {
-              toast.error("Please log in.");
+              toast.error("Please logged in.");
             } else {
               navigate("/");
             }
