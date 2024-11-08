@@ -19,13 +19,12 @@ const Header = () => {
   } = useContext(userContext);
 
   const { isMenuOpen, handleMenu } = useContext(menuContext);
-  console.log("checking menu", isMenuOpen);
+  console.log("checking menu", isMenuOpen, handleMenu);
 
   useEffect(() => {
     function checkForCookies() {
       try {
         const cookie = Cookies.get("token");
-        console.log(token);
         if (!cookie) {
           localStorage.setItem("loggedInUser", JSON.stringify({}));
           localStorage.setItem("isLoggedIn", JSON.stringify(false));
@@ -44,14 +43,12 @@ const Header = () => {
 
     checkForCookies();
     checkForLogIn();
-    handleMenu(false);
   }, [navigate]);
 
   const isLoggedIn = getIsLoggedInUser();
   const loggedInUser = getLoggedInUser();
 
   const toggleMenu = () => {
-    console.log(!isMenuOpen);
     handleMenu(!isMenuOpen);
   };
 
