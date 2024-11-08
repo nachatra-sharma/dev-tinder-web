@@ -24,6 +24,7 @@ const Header = () => {
     function checkForCookies() {
       try {
         const cookie = Cookies.get("token");
+        console.log(token);
         if (!cookie) {
           localStorage.setItem("loggedInUser", JSON.stringify({}));
           localStorage.setItem("isLoggedIn", JSON.stringify(false));
