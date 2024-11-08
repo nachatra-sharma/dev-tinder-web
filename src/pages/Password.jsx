@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BASE_URL } from "../utils/Constant";
 
 const Password = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -9,14 +10,13 @@ const Password = () => {
   const [newPassword, setNewPassword] = useState("");
 
   async function handleUpdatePassword() {
-    if (!currentPassword || !newPassword) {
-      toast.error("Fill all the fields.");
-      return;
-    }
+    try {
+      if (!currentPassword || !newPassword) {
+        toast.error("Fill all the fields.");
+        return;
+      }
 
-    const response = await fetch(
-      "http://localhost:8000/api/v1/profile/password",
-      {
+      const response = await fetch(BASE_URL + "/api/v1/profile/password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,13 +26,15 @@ const Password = () => {
           newPassword: newPassword,
         }),
         credentials: "include",
+      });
+      const result = await response.json();
+      if (!result.success) {
+        toast.error(result.error);
+      } else {
+        toast.success("Password Updated Successfully");
       }
-    );
-    const result = await response.json();
-    if (!result.success) {
-      toast.error(result.error);
-    } else {
-      toast.success("Password Updated Successfully");
+    } catch (error) {
+      toast.error("Something went wrong.");
     }
   }
 

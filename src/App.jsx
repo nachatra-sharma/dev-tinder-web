@@ -10,7 +10,6 @@ import Request from "./pages/Request";
 import UserContext from "./context/UserContext";
 import MenuProvider from "./context/MenuProvider";
 import Password from "./pages/Password";
-// import ProtectedRoute from "./components/ProtectedRoute";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 const App = () => {

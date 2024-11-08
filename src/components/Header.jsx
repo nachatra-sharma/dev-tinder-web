@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { userContext } from "../context/UserContext";
 import { menuContext } from "../context/MenuProvider";
 import Cookies from "js-cookie";
+import { BASE_URL } from "../utils/Constant";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const Header = () => {
 
   async function handleLogout() {
     try {
-      const response = await fetch("http://localhost:8000/api/v1/logout", {
+      const response = await fetch(BASE_URL + "/api/v1/logout", {
         method: "POST",
         headers: {
           "Content-Types": "application/json",

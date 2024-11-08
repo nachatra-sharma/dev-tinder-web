@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BASE_URL } from "../utils/Constant";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -10,33 +11,41 @@ const Profile = () => {
   const [photoURL, setPhotoURL] = useState("");
 
   async function getUserData() {
-    const response = await fetch("http://localhost:8000/api/v1/profile/view", {
-      method: "GET",
-      credentials: "include",
-    });
-    const result = await response.json();
-    setUserData(result?.data?.user);
+    try {
+      const response = await fetch(BASE_URL + "/api/v1/profile/view", {
+        method: "GET",
+        credentials: "include",
+      });
+      const result = await response.json();
+      setUserData(result?.data?.user);
+    } catch (error) {
+      toast.error("Something went wrong.");
+    }
   }
 
   async function handleEditUserProfile() {
-    const response = await fetch("http://localhost:8000/api/v1/profile/edit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        firstName,
-        lastName,
-        age: String(age),
-        photoURL,
-      }),
-    });
-    const result = await response.json();
-    if (result.success) {
-      toast.success("Profile Updated Successfully");
-    } else {
-      toast.error(result.error);
+    try {
+      const response = await fetch(BASE_URL + "/api/v1/profile/edit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          age: String(age),
+          photoURL,
+        }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Profile Updated Successfully");
+      } else {
+        toast.error(result.error);
+      }
+    } catch (error) {
+      toast.error("Something went wrong.");
     }
   }
 

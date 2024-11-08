@@ -1,24 +1,29 @@
 import { useState, useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import { BASE_URL } from "../utils/Constant";
 
 const Request = () => {
   const [userList, setUserList] = useState([]);
 
   async function getConnectionsList() {
-    const response = await fetch("http://localhost:8000/api/v1/user/requests", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    try {
+      const response = await fetch(BASE_URL + "/api/v1/user/requests", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
-    const result = await response.json();
-    if (!result.success) {
-      toast.error("No Request Found.");
+      const result = await response.json();
+      if (!result.success) {
+        toast.error("No Request Found.");
+      }
+      setUserList(result?.data?.requestList || []);
+    } catch (error) {
+      toast.error("Something went wrong.");
     }
-    setUserList(result?.data?.requestList || []);
   }
 
   useEffect(() => {
@@ -26,35 +31,44 @@ const Request = () => {
   }, []);
 
   async function handleAccepted(requestId) {
-    const response = await fetch(
-      "http://localhost:8000/api/v1/request/review/accepted/" + requestId,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
+    try {
+      const response = await fetch(
+        BASE_URL + "/api/v1/request/review/accepted/" + requestId,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Accepted the request.");
       }
-    );
-    const result = await response.json();
-    if (result.success) {
-      toast.success("Accepted the request.");
+    } catch (error) {
+      toast.error("Something went wrong.");
     }
   }
+
   async function handleRejected(requestId) {
-    const response = await fetch(
-      "http://localhost:8000/api/v1/request/review/rejected/" + requestId,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
+    try {
+      const response = await fetch(
+        BASE_URL + "/api/v1/request/review/rejected/" + requestId,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Rejected the request.");
       }
-    );
-    const result = await response.json();
-    if (result.success) {
-      toast.success("Rejected the request.");
+    } catch (error) {
+      toast.error("Something went wrong.");
     }
   }
 

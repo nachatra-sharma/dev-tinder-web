@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import { BASE_URL } from "../utils/Constant";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -9,54 +10,66 @@ const Home = () => {
   const [currentUser, setCurrentUser] = useState(0);
 
   async function getUser() {
-    const response = await fetch("http://localhost:8000/api/v1/user/feed", {
-      method: "GET",
-      credentials: "include",
-    });
-    const result = await response.json();
+    try {
+      const response = await fetch(BASE_URL + "/api/v1/user/feed", {
+        method: "GET",
+        credentials: "include",
+      });
+      const result = await response.json();
 
-    if (result.success) {
-      setData(result?.data?.userList);
-    } else {
-      navigate("/login");
+      if (result.success) {
+        setData(result?.data?.userList);
+      } else {
+        navigate("/login");
+      }
+    } catch (error) {
+      toast.error("Something went wrong.");
     }
   }
 
   async function handleIgnored(userId) {
-    const response = await fetch(
-      "http://localhost:8000/api/v1/request/send/ignored/" + userId,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
+    try {
+      const response = await fetch(
+        BASE_URL + "/api/v1/request/send/ignored/" + userId,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Profile Ignored");
+      } else {
+        toast.error("Something went wrong");
       }
-    );
-    const result = await response.json();
-    if (result.success) {
-      toast.success("Profile Ignored");
-    } else {
-      toast.error("Something went wrong");
+    } catch (error) {
+      toast.error("Something went wrong.");
     }
   }
 
   async function handleInterested(userId) {
-    const response = await fetch(
-      "http://localhost:8000/api/v1/request/send/interested/" + userId,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
+    try {
+      const response = await fetch(
+        BASE_URL + "/api/v1/request/send/interested/" + userId,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Sended Connection Request.");
+      } else {
+        toast.error("Something went wrong");
       }
-    );
-    const result = await response.json();
-    if (result.success) {
-      toast.success("Sended Connection Request.");
-    } else {
-      toast.error("Something went wrong");
+    } catch (error) {
+      toast.error("Something went wrong.");
     }
   }
 

@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { userContext } from "../context/UserContext";
 import { useContext } from "react";
 import "react-toastify/dist/ReactToastify.css";
+import { BASE_URL } from "../utils/Constant";
 
 const Login = () => {
   const naviagte = useNavigate();
@@ -15,31 +16,35 @@ const Login = () => {
   const { handleIsLoggedInUser, handleLoggedInUser } = useContext(userContext);
 
   async function loginUser() {
-    if (!email || !password) {
-      toast.error("Fill all the fields.");
-      return;
-    }
+    try {
+      if (!email || !password) {
+        toast.error("Fill all the fields.");
+        return;
+      }
 
-    const response = await fetch("http://localhost:8000/api/v1/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-      credentials: "include",
-    });
-    const result = await response.json();
+      const response = await fetch(BASE_URL + "/api/v1/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        credentials: "include",
+      });
+      const result = await response.json();
 
-    if (!result.success) {
-      toast.error(result.error);
-    }
-    if (result.success) {
-      handleLoggedInUser(result?.data?.responseUser);
-      handleIsLoggedInUser(true);
-      naviagte("/");
+      if (!result.success) {
+        toast.error(result.error);
+      }
+      if (result.success) {
+        handleLoggedInUser(result?.data?.responseUser);
+        handleIsLoggedInUser(true);
+        naviagte("/");
+      }
+    } catch (error) {
+      toast.error("Something went wrong.");
     }
   }
 

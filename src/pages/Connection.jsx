@@ -1,27 +1,28 @@
 import { useState, useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-
+import { BASE_URL } from "../utils/Constant";
 const Connection = () => {
   const [userList, setUserList] = useState([]);
 
   async function getConnectionsList() {
-    const response = await fetch(
-      "http://localhost:8000/api/v1/user/connections",
-      {
+    try {
+      const response = await fetch(BASE_URL + "/api/v1/user/connections", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-      }
-    );
+      });
 
-    const result = await response.json();
-    if (result.data.connectionList.length === 0) {
-      toast.error("No Connection Found.");
+      const result = await response.json();
+      if (result.data.connectionList.length === 0) {
+        toast.error("No Connection Found.");
+      }
+      setUserList(result?.data?.connectionList);
+    } catch (error) {
+      toast.error(result?.error);
     }
-    setUserList(result?.data?.connectionList);
   }
 
   useEffect(() => {

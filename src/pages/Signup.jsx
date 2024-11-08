@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BASE_URL } from "../utils/Constant";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -16,38 +17,42 @@ const Signup = () => {
   const [photoURL, setPhotoURL] = useState("");
 
   async function createNewUser() {
-    if (!email || !password || !firstName || !age || !gender) {
-      toast.error("Fill all the required fields");
-      return;
-    }
+    try {
+      if (!email || !password || !firstName || !age || !gender) {
+        toast.error("Fill all the required fields");
+        return;
+      }
 
-    if (age < 18 || age > 60) {
-      toast.error("Age must be between 18 to 60");
-      return;
-    }
+      if (age < 18 || age > 60) {
+        toast.error("Age must be between 18 to 60");
+        return;
+      }
 
-    const response = await fetch("http://localhost:8000/api/v1/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        firstName,
-        lastName,
-        email,
-        password,
-        age,
-        gender,
-        photoURL,
-      }),
-    });
-    const result = await response.json();
+      const response = await fetch(BASE_URL + "/api/v1/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+          age,
+          gender,
+          photoURL,
+        }),
+      });
+      const result = await response.json();
 
-    if (result.success) {
-      navigate("/");
-    } else {
-      toast.error(result.error);
-      return;
+      if (result.success) {
+        navigate("/");
+      } else {
+        toast.error(result.error);
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong.");
     }
   }
 
