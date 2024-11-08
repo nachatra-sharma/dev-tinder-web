@@ -19,6 +19,7 @@ const Header = () => {
   } = useContext(userContext);
 
   const { isMenuOpen, handleMenu } = useContext(menuContext);
+  console.log("checking menu", isMenuOpen);
 
   useEffect(() => {
     function checkForCookies() {
@@ -50,6 +51,7 @@ const Header = () => {
   const loggedInUser = getLoggedInUser();
 
   const toggleMenu = () => {
+    console.log(!isMenuOpen);
     handleMenu(!isMenuOpen);
   };
 
